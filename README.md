@@ -18,14 +18,19 @@ This repository contains a Laravel application for updating currency rates and p
     ```sh
    docker-compose up -d --build
 
-2. **Run Currency Update Command**
+2. **Run Migrations**  
+
+    ```sh
+    docker-compose exec web php artisan migrate
+
+3. **Run Currency Update Command**
 
     To manually trigger the currency update process, execute the following command inside the web container:
 
     ```sh
     docker-compose exec web php artisan currency:update-rates
 
-3. **Access the Application**
+4. **Access the Application**
 
     After setting up and running the Docker containers, you can access the application by navigating to:
 
@@ -44,8 +49,10 @@ This repository contains a Laravel application for updating currency rates and p
 
 ### Environment Variables
 
+    APP_URL=http://localhost:8000/
     CURRENCY_EXCHANGE_API_KEY=your_api_key_here 
     CURRENCY_EXCHANGE_API_URL=https://api.example.com
+    
 
 ### Cron Job Setup
 
