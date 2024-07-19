@@ -18,7 +18,7 @@ class CurrencyCalculatorController extends Controller
     {
         $this->apiKey = env('CURRENCY_EXCHANGE_API_KEY'); // Retrieve API key from .env file
         $this->apiService = $apiService;
-        $this->apiUrl = env('CURRENCY_EXCHANGE_API_URL');;
+        $this->apiUrl = env('CURRENCY_EXCHANGE_API_URL');
     }
 
     public function index()
@@ -27,39 +27,7 @@ class CurrencyCalculatorController extends Controller
 
         return view('currency_calculator',compact('supportedCurrencies'));
     }
-
-    public function updateCurrencyRates()
-    {
-        try {
-            $param = [
-                'apikey' => $this->apiKey
-            ];
-
-            // Fetch currency rates from the API
-            $rates = $this->apiService->callExternalApi($this->apiUrl, 'GET', $param);
-
-            if (isset($rates['error'])) {
-                return response()->json($rates, 500);
-            }
-
-            // Update or insert currency rates into the database
-            foreach ($rates['data'] as $code => $rate) {
-                CurrencyRate::updateOrCreate(
-                    ['currency_code' => $code],
-                    ['rate' => $rate]
-                );
-            }
-
-            return response()->json(['status' => 'Currency rates updated successfully.'], 200);
-
-        } catch (Exception $e) {
-            // Handle exception
-            return response()->json([
-                'error' => 'Failed to update currency rates.',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
+ 
 
     public function convert(Request $request)
     {

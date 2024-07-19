@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
-
+use App\Services\ApiService;
+use App\Models\CurrencyRate;
+use Exception;
 
 
 class UpdateCurrencyRates extends Command
@@ -29,14 +31,38 @@ class UpdateCurrencyRates extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(ApiService $apiService)
     {
-        $response = Http::get(config('app.url') . '/update-currency-rates');
+        try {
+            $apiKey = config('services.currency_exchange.api_key');
+            $apiUrl = config('services.currency_exchange.api_url');
 
-        if ($response->successful()) {
+            $param = [
+                'apikey' => $apiKey
+            ];
+
+            $rates = $apiService->callExternalApi($apiUrl, 'GET', $param);
+
+            if (isset($rates['error'])) {
+                $this->error('Failed to fetch currency rates: ' . $rates['error']);
+                return 1;
+            }
+
+            // Update or insert currency rates into the database
+            foreach ($rates['data'] as $code => $rate) {
+                CurrencyRate::updateOrCreate(
+                    ['currency_code' => $code],
+                    ['rate' => $rate]
+                );
+            }
+
             $this->info('Currency rates updated successfully.');
-        } else {
-            $this->error('Failed to update currency rates.');
+            return true;
+
+        } catch (Exception $e) {
+            // Handle exception
+            $this->error('Failed to update currency rates: ' . $e->getMessage());
+            return false;
         }
     }
 }

@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'currency_exchange' => [
+        'api_key' => env('CURRENCY_EXCHANGE_API_KEY'),
+        'api_url' => env('CURRENCY_EXCHANGE_API_URL'),
+    ],
+
 ];

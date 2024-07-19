@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd
 
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
 # Copy custom configuration files if any
 COPY ./apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
