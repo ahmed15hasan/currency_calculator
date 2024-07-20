@@ -22,25 +22,43 @@ This repository contains a Laravel application for updating currency rates and p
 
     ```sh
    copy .env.example and rename it to .env
+   
+3. **Add Environment Variables**  
 
-3. **Generate Key**  
+    ```sh
+   CURRENCY_EXCHANGE_API_KEY=your_api_key_here 
+   CURRENCY_EXCHANGE_API_URL=https://api.example.com
+
+
+
+4. **Install Composer**  
+
+    ```sh
+   docker-compose exec web composer install --ignore-platform-reqs 
+
+5. **777 Permission to Storage and Public**  
+
+    ```sh
+   sudo chmod -R 777 storage/ public/
+
+6. **Generate Key**  
 
     ```sh
    docker-compose exec web php artisan key:generate
 
-4. **Run Migrations**  
+7. **Run Migrations**  
 
     ```sh
     docker-compose exec web php artisan migrate
 
-5. **Run Currency Update Command**
+8. **Run Currency Update Command**
 
     To manually trigger the currency update process, execute the following command inside the web container:
 
     ```sh
     docker-compose exec web php artisan currency:update-rates
 
-6. **Access the Application**
+9. **Access the Application**
 
     After setting up and running the Docker containers, you can access the application by navigating to:
 
@@ -54,14 +72,7 @@ This repository contains a Laravel application for updating currency rates and p
 
     docker-compose.yml: Contains the configuration for Docker services, including the web server and database.
 
-    app/Console/Commands/UpdateCurrencyRates.php: Laravel console command for updating currency rates. 
-     
-
-### Environment Variables
-
-    APP_URL=http://localhost:8000/
-    CURRENCY_EXCHANGE_API_KEY=your_api_key_here 
-    CURRENCY_EXCHANGE_API_URL=https://api.example.com
+    app/Console/Commands/UpdateCurrencyRates.php: Laravel console command for updating currency rates.  
     
 
 ### Cron Job Setup
